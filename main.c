@@ -40,14 +40,24 @@ int rnd(int from, int to) {
 
 int main() {
 
+    int n, p, seed;
     // 1. Nacitanie vstupnych parametrov n, p, seed.
-
+    scanf("%d %d %d", &n, &p, &seed);
     // 2. Inicializacia generatora nahodnych cisiel.
     // Treba zavolat funkciu srnd() a odovzdat do nej nacitanu hodnotu parametra seed.
-
+    srnd(seed);
     // 3. Osetrenie dlzky trate (E1)
+    if (n<MIN_TRACK || n>MAX_TRACK)
+    {
+        printf("E1\n");
+        return 0;
+    }
     // 4. Osetrenie poctu prekazok (E2)
-
+    if (p>n/2)
+    {
+        printf("E2\n");
+        return 0;
+    }
     // 5. Vygenerovanie prekazok na trati
     // Treba osetrit chybovu situaciu E3 - objavenie viac ako 3 po sebe iducich vygenerovanych prekazok.
     
