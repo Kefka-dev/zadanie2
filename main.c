@@ -59,8 +59,42 @@ int main() {
         return 0;
     }
     // 5. Vygenerovanie prekazok na trati
-    // Treba osetrit chybovu situaciu E3 - objavenie viac ako 3 po sebe iducich vygenerovanych prekazok.
+    int trat[MAX_TRACK], pos, prekazok = 0;
+    for (int i = 0; i < n; i++)
+    {
+        trat[i] = 0;
+    }
     
+    while(prekazok < p)
+    {
+        pos = rnd(1, n-2);
+        if (trat[pos] != 1)
+        {
+            trat[pos] = 1;
+            prekazok++;
+        }    
+    }
+    
+    // Treba osetrit chybovu situaciu E3 - objavenie viac ako 3 po sebe iducich vygenerovanych prekazok.
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (trat[i] == 1)
+        {
+            count++;
+
+            if (count>3)
+            {
+                printf("E3");
+                return 0;
+            }
+
+        } else if (trat[i] == 0)
+        {
+            count = 0;
+        }
+            
+    }
     // 6. Vypis vstupnych parametrov.
     // 7. Vypis dostihovej trate.
     // 8. Vypis pretekov.
