@@ -104,43 +104,62 @@ int main() {
     }
     printf("\n");
 
-    
+
     // 8. Vypis pretekov.
     //koniec dostihov = vestky kone v ciely alrbo vsetky kone eliminovane
-    int kone[K], PosBefore[K], PosAfter[K];
+    int kone[K], PosBefore[K], PosAfter[K], Nadzigal[K];
     //koneDead =1 vsetky kone umrely, =0 aspon jeden zije
-    int koneDead, roll, round = 1;
+    int koneDead, roll/*, round = 1*/;
     for (int i = 0; i < K; i++)
     {
         kone[i] = 1;       //vsetky kone na zaciatku ziju
         PosBefore[i] = -1; //pociatocna pozicia vsetkych konov je -1
-        PosAfter[i] = -1;
+        PosAfter[i] = -1;  //Na zaciatku je befora a after 1 a ten isty stav
+        Nadzigal[i] = 0;   //Defaultne nikto nenarazil
     }
     
-    // kde i je cislo kona 
-    for (int i = 0; i < K; i++)
+    //test for
+    for (int round = 1; round <= 2; round++)
     {
-        roll = rnd(1, 6);
-        PosAfter[i] = PosAfter[i] + roll;
-        //check ci nadzigali
-        if (trat[PosAfter[i]] == 1)
+        // kde i je cislo kona(pri vypisoch i+1 aby som pocital od 1)
+        for (int i = 0; i < K; i++)
         {
-            PosAfter[i] = PosAfter[i] + 1;
+            //ak je kon mrtvy tak sa ide na dalsieho kona
+            if (kone[i] == 0)
+            {
+                continue;
+            }
+
+            if (Nadzigal[i] == 1)
+            {
+                printf("%3d %3d   -   -   -\n", round, i+1);
+                continue;
+            }
+            
+            roll = rnd(1, 6);
+            PosAfter[i] = PosAfter[i] + roll;
+            
+            //check ci nadzigali
             if (trat[PosAfter[i]] == 1)
             {
-                printf("%3d %3d %3d %3d %3d F\n", round, i+1, PosBefore[i], roll, PosAfter[i]);
+                PosAfter[i] = PosAfter[i] + 1;
+                if (trat[PosAfter[i]] == 1)
+                {
+                    printf("%3d %3d %3d %3d %3d F\n", round, i+1, PosBefore[i], roll, PosAfter[i]);
+                    kone[i] = 0; 
+                }
+                else
+                {
+                    printf("%3d %3d %3d %3d %3d N\n", round, i+1, PosBefore[i], roll, PosAfter[i] + 1);
+                    Nadzigal[i] = 1;
+                }
+                continue;
             }
-            else
-            {
-                printf("%3d %3d %3d %3d %3d N\n", round, i+1, PosBefore[i], roll, PosAfter[i] + 1);
-            }
-        }
-        else
-        {
             printf("%3d %3d %3d %3d %3d \n", round, i+1, PosBefore[i], roll, PosAfter[i]);
+            PosBefore[i] = PosAfter[i];
         }
-        PosBefore[i] = PosAfter[i];
     }
+    
     
     
     // 9. Vypis poradia koni v cieli.
