@@ -96,7 +96,13 @@ int main() {
             
     }
     // 6. Vypis vstupnych parametrov.
+    printf("%d %d %d %d\n", K, n,p, seed);
     // 7. Vypis dostihovej trate.
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d", trat[i]);
+    }
+    printf("\n");
     // 8. Vypis pretekov.
     // 9. Vypis poradia koni v cieli.
 
