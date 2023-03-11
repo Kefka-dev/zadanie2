@@ -85,7 +85,7 @@ int main() {
 
             if (count>3)
             {
-                printf("E3");
+                printf("E3\n");
                 return 0;
             }
 
