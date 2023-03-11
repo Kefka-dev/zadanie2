@@ -107,19 +107,20 @@ int main() {
 
     // 8. Vypis pretekov.
     //koniec dostihov = vestky kone v ciely alrbo vsetky kone eliminovane
-    int kone[K], PosBefore[K], PosAfter[K], Nadzigal[K];
-    //koneDead =1 vsetky kone umrely, =0 aspon jeden zije
-    int koneDead, roll/*, round = 1*/;
+    //vytazi => poradie vytazov, vyrhali, vyhral[i] = 1/0 ci kon na indexe i uz vyhral alebo nie
+    int kone[K], PosBefore[K], PosAfter[K], Nadzigal[K], vytazi[K], vyhral[K];
+    int zivychKonov = K, roll, round = 1, indexVytazov = 0;
     for (int i = 0; i < K; i++)
     {
         kone[i] = 1;       //vsetky kone na zaciatku ziju
         PosBefore[i] = -1; //pociatocna pozicia vsetkych konov je -1
         PosAfter[i] = -1;  //Na zaciatku je befora a after 1 a ten isty stav
         Nadzigal[i] = 0;   //Defaultne nikto nenarazil
+        vyhral[i] = 0;
     }
     
     //test for
-    for (int round = 1; round <= 2; round++)
+    while(zivychKonov!= 0)
     {
         // kde i je cislo kona(pri vypisoch i+1 aby som pocital od 1)
         for (int i = 0; i < K; i++)
@@ -129,11 +130,23 @@ int main() {
             {
                 continue;
             }
-
+            // ak narazil, vypise sa cakanie, ide sa na dalsieho kona
             if (Nadzigal[i] == 1)
             {
                 printf("%3d %3d   -   -   -\n", round, i+1);
+                Nadzigal[i] = 0;
                 continue;
+            }
+
+            if (vyhral[i] == 1)
+            {
+                continue;
+            }
+            
+            //pozicie sa indexuju od 0 cize pri vsetkych okrem prveho kola treba priratat 1
+            if (round != 1)
+            {
+                PosBefore[i] = PosBefore[i] +1;
             }
             
             roll = rnd(1, 6);
@@ -144,25 +157,47 @@ int main() {
             {
                 PosAfter[i] = PosAfter[i] + 1;
                 if (trat[PosAfter[i]] == 1)
-                {
+                { 
                     printf("%3d %3d %3d %3d %3d F\n", round, i+1, PosBefore[i], roll, PosAfter[i]);
+                    zivychKonov--; 
                     kone[i] = 0; 
                 }
                 else
                 {
-                    printf("%3d %3d %3d %3d %3d N\n", round, i+1, PosBefore[i], roll, PosAfter[i] + 1);
+                    
+                    printf("%3d %3d %3d %3d %3d N\n", round, i+1, PosBefore[i], roll, PosAfter[i]+1);
                     Nadzigal[i] = 1;
                 }
+                PosBefore[i] = PosAfter[i];
                 continue;
             }
-            printf("%3d %3d %3d %3d %3d \n", round, i+1, PosBefore[i], roll, PosAfter[i]);
+            // check ci vyhral 
+            if ((PosAfter[i]+1) > n)
+            {
+                printf("%3d %3d %3d %3d %3d *\n", round, i+1, PosBefore[i], roll, PosAfter[i] + 1);
+                vyhral[i] = 1;
+                vytazi[indexVytazov] = i+1; //i+1 je cislo kona ktory vyhral
+                indexVytazov++;
+                continue;
+            }
+            
+            printf("%3d %3d %3d %3d %3d\n", round, i+1, PosBefore[i], roll, PosAfter[i] + 1);
             PosBefore[i] = PosAfter[i];
+        }
+        round++;
+        if (zivychKonov == indexVytazov)
+        {
+            break;
         }
     }
     
     
-    
     // 9. Vypis poradia koni v cieli.
-
+    printf("ORDER:");
+    for (int i = 0; i < zivychKonov; i++)
+    {
+        printf(" %d", vytazi[i]);
+    }
+    
     return 0;
 }
